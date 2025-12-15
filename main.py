@@ -16,6 +16,27 @@ class AppClima(QWidget):
         self.temperatura_label = QLabel("15°C", self)
         self.emoji_label = QLabel("☀️", self)
         self.descricao_label = QLabel("Ensolarado", self)
+        self.initUI()
+    
+    def initUI(self):
+        self.setWindowTitle("App de Clima")
+
+        vbox = QVBoxLayout()
+
+        vbox.addWidget(self.cidade_label)
+        vbox.addWidget(self.cidade_input)
+        vbox.addWidget(self.get_clima_button)
+        vbox.addWidget(self.temperatura_label)
+        vbox.addWidget(self.emoji_label)
+        vbox.addWidget(self.descricao_label)
+
+        self.setLayout(vbox)
+
+        self.cidade_label.setAlignment(Qt.AlignCenter)
+        self.cidade_input.setAlignment(Qt.AlignCenter)
+        self.temperatura_label.setAlignment(Qt.AlignCenter)
+        self.emoji_label.setAlignment(Qt.AlignCenter)
+        self.descricao_label.setAlignment(Qt.AlignCenter)
 
 
 
