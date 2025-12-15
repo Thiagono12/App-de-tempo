@@ -13,9 +13,9 @@ class AppClima(QWidget):
         self.cidade_label = QLabel("Digite o nome da cidade: ", self)
         self.cidade_input = QLineEdit(self)
         self.get_clima_button = QPushButton("Veja o clima!", self)
-        self.temperatura_label = QLabel("15°C", self)
-        self.emoji_label = QLabel("☀️", self)
-        self.descricao_label = QLabel("Ensolarado", self)
+        self.temperatura_label = QLabel(self)
+        self.emoji_label = QLabel(self)
+        self.descricao_label = QLabel(self)
         self.initUI()
     
     def initUI(self):
@@ -77,6 +77,43 @@ class AppClima(QWidget):
                            }
 
             """)
+            
+        self.get_clima_button.clicked.connect(self.get_clima)
+
+    def get_clima(self):
+        
+        api_key = "9d53a2dd349290061af70390aa033b15"
+        cidade = self.cidade_input.text()
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}"
+
+        
+        try:
+            resposta = requests.get(url)
+            resposta.raise_for_status()
+            data = resposta.json()
+
+            if data ==["cod"] == 200:
+                self.mostrar_clima(data)
+
+                 
+
+        except requests.exceptions.HTTPError:
+            match resposta.status_code:
+                case 400:
+        except requests.exceptions.RequestException:
+            pass
+
+        
+
+    def mostrar_erro(self, msg):
+        pass
+    
+
+    def mostrar_clima(self, data):
+        pass
+
+
+
 
 
 
