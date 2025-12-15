@@ -82,7 +82,7 @@ class AppClima(QWidget):
 
     def get_clima(self):
         
-        api_key = "9d53a2dd349290061af70390aa033b15"
+        api_key = "9d53a2dd349290061af"
         cidade = self.cidade_input.text()
         url = f"https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}"
 
@@ -100,48 +100,79 @@ class AppClima(QWidget):
         except requests.exceptions.HTTPError as http_error:
             match resposta.status_code:
                 case 400:
-                    print("Não deu amigo!\nPor favor olhe o que digitou")
+                    self.mostrar_erro("Não deu amigo!\nPor favor olhe o que digitou")
                 case 401:
-                    print("Não Autorizado\n chave api key inválida")
+                    self.mostrar_erro("Não Autorizado\n chave api key inválida")
                 case 403:
-                    print("Aceso negado.")
+                    self.mostrar_erro("Aceso negado.")
                 case 404:
-                    print("Não encontrado\n Cidade não encontrada")
+                    self.mostrar_erro("Não encontrado\n Cidade não encontrada")
                 case 500:
-                    print("Problemas no servidor\nPor favor tente mais tarde")
+                    self.mostrar_erro("Problemas no servidor\nPor favor tente mais tarde")
                 case 502:
-                    print("Porta de entrada com problemas\nResposta de sesrvidor inválida")
+                    self.mostrar_erro("Porta de entrada com problemas\nResposta de sesrvidor inválida")
                 case 503:
-                    print("Serviço indisponível\nServidor caiu")
+                    self.mostrar_erro("Serviço indisponível\nServidor caiu")
                 case 504:
-                    print("Porta de entrada timeout\n Sem resposta do servidor")
+                    self.mostrar_erro("Porta de entrada timeout\n Sem resposta do servidor")
                 case _:
-                    print(f"Ocorreu um erro HTPP\n {http_error}")
+                    self.mostrar_erro(f"Ocorreu um erro HTPP\n {http_error}")
 
         except requests.exceptions.ConnectionError:
-            print("Erro na conexão\n Veja sua conexão")
+            self.mostrar_erro("Erro na conexão\n Veja sua conexão")
         except requests.exceptions.TooManyRedirects:
-            print("Erro de tempo")
+            self.mostrar_erro("Erro de tempo")
         except requests.exceptions.Timeout:
-            print("Muitos pedidos\Olhe sua Url")
+            self.mostrar_erro("Muitos pedidos\Olhe sua Url")
         except requests.exceptions.RequestException as req_error:
-            print(f"Request eRROR: \n{req_error}")
+            self.mostrar_erro(f"Request eRROR: \n{req_error}")
 
 
 
         
 
     def mostrar_erro(self, msg):
-        pass
+        self.temperatura_label.setStyleSheet("font-size : 30px;")
+        self.temperatura_label.setText(msg)
     
 
     def mostrar_clima(self, data):
-        print(data)
+        self.temperatura_label.setStyleSheet("font-size: 30px;")
+        temperatura_k = data["main"]["temp"]
+        temperatura_c = temperatura_k - 273.15
+        weather_id = data["weather"][0]["id"]
+        tempo_descricao = data["weather"][0]["description"]
+        
+        self.temperatura_label.setText(f"{temperatura_c:.2f}°C")
+        self.emoji_label.setText(self.get_tempo_emoji(weather_id))
+        self.descricao_label.setText(f"{tempo_descricao}")
 
-
-
-
-if __name__ == "__main__":
+    @staticmethod
+    def get_tempo_emoji(weather_id):
+        
+        if 200 <= weather_id <= 232:
+            return "⛈️"
+        elif 300 <= weather_id <= 321:
+            return "🌦️"
+        elif 500 <= weather_id <= 531:
+            return "🌧️"
+        elif 600 <= weather_id <= 622:
+            return "❄️"
+        elif 701 <= weather_id <= 741:
+            return "🌁"
+        elif weather_id == 762:
+            return "🌋"
+        elif weather_id == 771:
+            return "🍃"
+        elif weather_id == 781:
+            return "🌪️"
+        elif weather_id == 800:
+            return "☀️"
+        elif 801 <= weather_id <= 804:
+            return "☁️"
+        else:
+            return ""
+if __name__ == "__main__":  
     app = QApplication(sys.argv)
     App_Clima = AppClima() 
     App_Clima.show()
