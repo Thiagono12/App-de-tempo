@@ -92,16 +92,42 @@ class AppClima(QWidget):
             resposta.raise_for_status()
             data = resposta.json()
 
-            if data ==["cod"] == 200:
+            if data ["cod"] == 200:
                 self.mostrar_clima(data)
 
                  
 
-        except requests.exceptions.HTTPError:
+        except requests.exceptions.HTTPError as http_error:
             match resposta.status_code:
                 case 400:
-        except requests.exceptions.RequestException:
-            pass
+                    print("Não deu amigo!\nPor favor olhe o que digitou")
+                case 401:
+                    print("Não Autorizado\n chave api key inválida")
+                case 403:
+                    print("Aceso negado.")
+                case 404:
+                    print("Não encontrado\n Cidade não encontrada")
+                case 500:
+                    print("Problemas no servidor\nPor favor tente mais tarde")
+                case 502:
+                    print("Porta de entrada com problemas\nResposta de sesrvidor inválida")
+                case 503:
+                    print("Serviço indisponível\nServidor caiu")
+                case 504:
+                    print("Porta de entrada timeout\n Sem resposta do servidor")
+                case _:
+                    print(f"Ocorreu um erro HTPP\n {http_error}")
+
+        except requests.exceptions.ConnectionError:
+            print("Erro na conexão\n Veja sua conexão")
+        except requests.exceptions.TooManyRedirects:
+            print("Erro de tempo")
+        except requests.exceptions.Timeout:
+            print("Muitos pedidos\Olhe sua Url")
+        except requests.exceptions.RequestException as req_error:
+            print(f"Request eRROR: \n{req_error}")
+
+
 
         
 
@@ -110,9 +136,7 @@ class AppClima(QWidget):
     
 
     def mostrar_clima(self, data):
-        pass
-
-
+        print(data)
 
 
 
