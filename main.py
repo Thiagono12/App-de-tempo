@@ -38,6 +38,46 @@ class AppClima(QWidget):
         self.emoji_label.setAlignment(Qt.AlignCenter)
         self.descricao_label.setAlignment(Qt.AlignCenter)
 
+        self.cidade_label.setObjectName("cidade_label")
+        self.cidade_input.setObjectName("cidade_input")
+        self.temperatura_label.setObjectName("temperatura_label")
+        self.get_clima_button.setObjectName("get_clima_button")
+        self.emoji_label.setObjectName("emoji_label")
+        self.descricao_label.setObjectName("descricao_label")
+
+        self.setStyleSheet(""" 
+                QLabel, QPushbutton{
+                           font-family: calibir;
+                           }
+                           QLabel#cidade_label{
+                                font-size: 40px;
+                                font-style: italic;
+                           }
+
+                           QLineEdit#cidade_input{
+                           font-size: 40px;
+                           }
+
+                           QPushButton#get_clima_button{
+                           font-size: 30px;
+                           font-weight: bold;
+                           }
+
+                           QLabel#temperatura_label{
+                           font-size: 75px;
+                           }
+
+                           QLabel#emoji_label{
+                           font-size: 100px;
+                           font-family: Segoe UI emoji;
+                           }
+
+                            QLabel#descricao_label{
+                           font-size: 50px;
+                           }
+
+            """)
+
 
 
 if __name__ == "__main__":
