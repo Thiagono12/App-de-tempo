@@ -88,7 +88,7 @@ class AppClima(QWidget): #Criamos uma classe para definir oq teremos na tela Ini
     #Function to get the weather
     def get_clima(self): 
         
-        api_key = "9d53a2dd349290061af" #sua chave api #your apikey
+        api_key = "9d53390aa033b15" #sua chave api #your apikey
         cidade = self.cidade_input.text()
         url = f"https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}" #usando Fstring par subistutir o link #using the F str to replace the URL
 
