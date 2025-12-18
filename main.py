@@ -3,25 +3,26 @@
 import sys 
 import requests
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel,
-                              QLineEdit, QPushButton, QVBoxLayout)
-from PyQt5.QtCore import Qt
+                              QLineEdit, QPushButton, QVBoxLayout)  
+from PyQt5.QtCore import Qt 
+#A lib PyQT5, nos permite criar uma interface visual
+#PyQt5 allows us to create visual interface
 
-
-class AppClima(QWidget):
+class AppClima(QWidget): #Criamos uma classe para definir oq teremos na tela Inicial, como a planta de uma casa # We create a Class to define what will be on our screen, serving as a blueprint
     def __init__(self):
-        super().__init__()
-        self.cidade_label = QLabel("Digite o nome da cidade: ", self)
-        self.cidade_input = QLineEdit(self)
-        self.get_clima_button = QPushButton("Veja o clima!", self)
-        self.temperatura_label = QLabel(self)
-        self.emoji_label = QLabel(self)
-        self.descricao_label = QLabel(self)
+        super().__init__() #A herença da nossa classe é a QWidget, inicializamos a herança do pai chamando a função super #Our class inherits from QWidget, we initialize the parent class calling the function super()
+        self.cidade_label = QLabel("Digite o nome da cidade: ", self) #prompting for the user
+        self.cidade_input = QLineEdit(self) #city name input
+        self.get_clima_button = QPushButton("Veja o clima!", self) #Botão para ver o clima #button to fetch the weather
+        self.temperatura_label = QLabel(self) #temperature label
+        self.emoji_label = QLabel(self) #Displays emoji based on weather
+        self.descricao_label = QLabel(self) #description of the weather condition, for example: "raining"
         self.initUI()
     
-    def initUI(self):
+    def initUI(self): #Definimos a função para iniciar a UI #Defining the function to start the UI
         self.setWindowTitle("App de Clima")
 
-        vbox = QVBoxLayout()
+        vbox = QVBoxLayout() #fazendo nosso layout no formato de widgets em Vbox #Making our layout, using vbox
 
         vbox.addWidget(self.cidade_label)
         vbox.addWidget(self.cidade_input)
@@ -38,7 +39,9 @@ class AppClima(QWidget):
         self.emoji_label.setAlignment(Qt.AlignCenter)
         self.descricao_label.setAlignment(Qt.AlignCenter)
 
-        self.cidade_label.setObjectName("cidade_label")
+        #dando nome aos objetos 
+        #giving name for the objects
+        self.cidade_label.setObjectName("cidade_label") 
         self.cidade_input.setObjectName("cidade_input")
         self.temperatura_label.setObjectName("temperatura_label")
         self.get_clima_button.setObjectName("get_clima_button")
@@ -47,7 +50,7 @@ class AppClima(QWidget):
 
         self.setStyleSheet(""" 
                 QLabel, QPushbutton{
-                           font-family: calibir;
+                           font-family: Calibir;
                            }
                            QLabel#cidade_label{
                                 font-size: 40px;
@@ -76,17 +79,21 @@ class AppClima(QWidget):
                            font-size: 50px;
                            }
 
-            """)
+            """) #Estilizando as fontes #Styling the fonts
             
         self.get_clima_button.clicked.connect(self.get_clima)
 
-    def get_clima(self):
-        
-        api_key = "9d53a2dd349290061af"
-        cidade = self.cidade_input.text()
-        url = f"https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}"
 
+    #Função para obter o clima
+    #Function to get the weather
+    def get_clima(self): 
         
+        api_key = "9d53a2dd349290061af" #sua chave api #your apikey
+        cidade = self.cidade_input.text()
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}" #usando Fstring par subistutir o link #using the F str to replace the URL
+
+        #exception block, to show what went wrong
+        #bloco para mostrar o erro 
         try:
             resposta = requests.get(url)
             resposta.raise_for_status()
@@ -116,14 +123,14 @@ class AppClima(QWidget):
                 case 504:
                     self.mostrar_erro("Porta de entrada timeout\n Sem resposta do servidor")
                 case _:
-                    self.mostrar_erro(f"Ocorreu um erro HTPP\n {http_error}")
+                    self.mostrar_erro(f"Ocorreu um erro HTTP\n {http_error}")
 
         except requests.exceptions.ConnectionError:
             self.mostrar_erro("Erro na conexão\n Veja sua conexão")
         except requests.exceptions.TooManyRedirects:
-            self.mostrar_erro("Erro de tempo")
-        except requests.exceptions.Timeout:
             self.mostrar_erro("Muitos pedidos\Olhe sua Url")
+        except requests.exceptions.Timeout:
+            self.mostrar_erro("Erro de tempo")
         except requests.exceptions.RequestException as req_error:
             self.mostrar_erro(f"Request eRROR: \n{req_error}")
 
@@ -136,6 +143,9 @@ class AppClima(QWidget):
         self.temperatura_label.setText(msg)
     
 
+
+    #function to display the weather. The Api fetches data, using the field that user entered (city name). And converts the result from K to C
+    #função para mostrar o clima. A API busca, usando o campo que o usuario escreveu antes (nome da cidade). E converte o resultado de K para C
     def mostrar_clima(self, data):
         self.temperatura_label.setStyleSheet("font-size: 30px;")
         temperatura_k = data["main"]["temp"]
@@ -147,6 +157,9 @@ class AppClima(QWidget):
         self.emoji_label.setText(self.get_tempo_emoji(weather_id))
         self.descricao_label.setText(f"{tempo_descricao}")
 
+
+    #Displays emoji based on the weather_id
+    #Mostra emoji baseado no clima_id
     @staticmethod
     def get_tempo_emoji(weather_id):
         
@@ -172,6 +185,9 @@ class AppClima(QWidget):
             return "☁️"
         else:
             return ""
+        
+
+    #Main
 if __name__ == "__main__":  
     app = QApplication(sys.argv)
     App_Clima = AppClima() 
